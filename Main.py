@@ -58,13 +58,13 @@ from PIL import ImageTk, Image
 from datetime import datetime
 from time import sleep
 
-pathServiceAccount = r"path" #1
-pathTxt = r"path" #2
-chromeSpreadsheetName = "Copy of Copy of Inv Tracker Copy 2022-12-23 07:47:20" #3
-ipadSpreadsheetName = 'Copy of Ipad Inventory' #4
-sellSheetName = 'Current Year'
-workbookSell = r"path" #5
-workbookTargetAssets = r"path" #6
+pathServiceAccount = r"#####" #1
+pathTxt = r"#####" #2
+chromeSpreadsheetName = "#####" #3
+ipadSpreadsheetName = '#####' #4
+sellSheetName = '#####'
+workbookSell = r"#####" #5
+workbookTargetAssets = r"#####" #6
 currentlyRunning = False #determines if it's currently running or not
 togs = [] #Table for all of the active toggles
 serviceAccount = gspread.service_account(filename = pathServiceAccount) #loads the service account
@@ -182,16 +182,16 @@ def destinyFull():
 
     options.add_experimental_option('detach', True) #closes window on completion
     options.add_argument('--incognito')
-    options.headless = False #If selected true, it runs in the background
+    #options.add_argument('--headless') #If selected activated, it runs in the background
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
     options = options) #Chooses Chrome as the browser
-    driver.implicitly_wait(5)
+    driver.implicitly_wait(0.5)
 
     driver.get("https://library.seymour.k12.wi.us/district/servlet/presentdistrictloginform.do") #Goes to the destiny login page
     driver.find_element('xpath', '//*[@id="Login"]').click() #Clicks to go to the login screen
-    driver.find_element('xpath', '//*[@id="ID_loginName"]').send_keys('#######') #Enters username
-    driver.find_element('xpath', '//*[@id="ID_password"]').send_keys('#######') #Enters password
+    driver.find_element('xpath', '//*[@id="ID_loginName"]').send_keys('######') #Enters username
+    driver.find_element('xpath', '//*[@id="ID_password"]').send_keys('######') #Enters password
     driver.find_element('xpath', '/html/body/table/tbody/tr[4]/td/table/tbody/tr/td/form/table/tbody/tr[3]/td/table/tbody/tr/td/table/tbody/tr[4]/td/input[1]').click() #Clicks login
     driver.find_element('xpath', '//*[@id="rightTableSites_0"]/tbody/tr/td/ul/li/span/a[1]').click() #Clicks SMS as the location
     driver.get('https://library.seymour.k12.wi.us/cataloging/servlet/presentadvancedsearchredirectorform.do?l2m=Library%20Search&tm=TopLevelCatalog') #Goes to the catalog search
@@ -204,7 +204,6 @@ def destinyFull():
                 return False
         return True
     for i, asset in enumerate(assetChromebooks): #Goes through this process with each one of the assets
-        sonicRun()
         if len(str(asset)) == 4:
             driver.find_element('xpath', '/html/body/table[2]/tbody/tr[3]/td/table/tbody/tr/td[2]/table/tbody/tr/td[2]/table/tbody/tr/td/form/table[2]/tbody/tr/td/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]/table/tbody/tr/td[2]/input').send_keys('0' + str(asset)) #Types in the asset# + a 0 at the start
         elif len(str(asset)) > 4:
@@ -270,7 +269,7 @@ def googleAdmin():
         try:
             elementInteract('xpath', '/html/body/div[1]/div[1]/div[2]/div/c-wiz/div/div[2]/div/div[1]/div/form/span/section/div/div/div[1]/div/div[1]/div/div[1]/input', False, username) #Types username
             elementInteract('xpath', '/html/body/div[1]/div[1]/div[2]/div/c-wiz/div/div[2]/div/div[2]/div/div[1]/div/div/button/span', True) #Clicks next
-            try: #Checks if the password box that isn't the school login portal exists
+            try: #Checks if the password box that isn't the seymour login portal exists
                 elementInteract('xpath', '//*[@id="password"]/div[1]/div/div[1]/input', False, password) #Inputs password
                 elementInteract('xpath', '//*[@id="passwordNext"]/div/button/span', True) #Clicks the next button
                 sonicRun()
@@ -279,7 +278,6 @@ def googleAdmin():
                 elementInteract('xpath', '/html/body/div/form[1]/div/div/div[2]/div[1]/div/div/div/div/div[1]/div[3]/div/div/div/div[4]/div/div/div/div[2]/input', True) #Clicks next
                 elementInteract('xpath', '/html/body/div/form[1]/div/div/div[2]/div[1]/div/div/div/div/div/div[3]/div/div[2]/div/div[3]/div/div[2]/input', False, password) #Inputs password
                 elementInteract('xpath', '/html/body/div/form[1]/div/div/div[2]/div[1]/div/div/div/div/div/div[3]/div/div[2]/div/div[4]/div[2]/div/div/div/div/input', True) #Clicks next
-                elementInteract('xpath', '/html/body/div/form/div/div/div[2]/div[1]/div/div/div/div/div/div[3]/div/div[2]/div/div[3]/div[2]/div/div/div[2]/input', True)
         except: 
             log('Failed to log in')   
             raise
@@ -290,14 +288,15 @@ def googleAdmin():
             elementInteract('xpath', '//*[@id="mCnz0"]/div/div/div[2]/span/div/div[3]/div/div/div/div[2]/ul/li[1]/div/div[2]/div[2]/div/div/span/label[1]/div/div[3]/div', True) #Selects All as a status filter
         else:return
         elementInteract('xpath', '//*[@id="mCnz0"]/div/div/div[2]/span/div/div[3]/div/div/div/div[2]/ul/li[1]/div/div[2]/div[3]/div/span/span', True) #Clicks apply to the status filter
-        driver.implicitly_wait(0) #Disables implcitly_wait
+        driver.implicitly_wait(0.5)
         for i, asset in enumerate(assetChromebooks):
             elementInteract('xpath', '//*[@id="mCnz0"]/div/div/div[2]/span/div/div[3]/div/div/div/div[2]/ul/li[2]/div[2]/div[1]/input[2]', True) #clicks the blank space so the dropdown menu appear
             elemAssetID = driver.find_element('xpath', '/html/body/div[7]/c-wiz/div/div[1]/div/div/div[2]/div/div[2]/div[3]/div/div/div[2]/span/div/div[3]/div/div/div/div[2]/ul/li[2]/div[2]/div[2]/div/div/div/div[3]/div')
             driver.execute_script('arguments[0].click();', elemAssetID) #selects Asset ID as the search preference
             if waitForExistance('//*[@id="mCnz0"]/div/div/div[2]/span/div/div[3]/div/div/div/div[2]/ul/li[2]/div[2]/div[2]/div[2]/div/span/div/div/div/div/div[1]/div/div[1]/input', 10):
                 elementInteract('xpath', '//*[@id="mCnz0"]/div/div/div[2]/span/div/div[3]/div/div/div/div[2]/ul/li[2]/div[2]/div[2]/div[2]/div/span/div/div/div/div/div[1]/div/div[1]/input', False, (str(asset), Keys.RETURN)) #searches the asset
-            else:return
+            else:
+                return
             try:
                 sleep(1)
                 elementInteract('xpath', '//*[@id="mCnz0"]/div/div/div[2]/span/div/div[3]/div/div/div/div[3]/div[2]/table/thead/tr/th[1]/span/div', True) #Clicks the checkbox
@@ -341,6 +340,7 @@ def googleAdmin():
                 print(f'{asset} is already deprovisioned')
                 sonicRun()
             removeFilter()
+        return
 
     def submit_credentials():
         global username
@@ -353,11 +353,13 @@ def googleAdmin():
         
         #starts the main script
         mainGoogleAdmin()
+        root.quit()
+        return
     
     window = tk.Tk()
 
     # Creates a label and entry widget for the username
-    username_label = tk.Label(window, text="Username:")
+    username_label = tk.Label(window, text="Email:")
     username_label.pack()
     username_entry = tk.Entry(window)
     username_entry.pack()
@@ -374,7 +376,7 @@ def googleAdmin():
 
     # Runs the login info's event loop
     window.mainloop()
-
+    return
 def iPads():
     #Finally deporovisioning
     def ipadFinal():
@@ -557,8 +559,11 @@ def run():
                     func(invSheetName.get())
                 else:
                     func()
-                percentDone += 1/len(togs)*100
-                ringText.configure(text=str(percentDone) + '%')
+                percentDone += round(1/len(togs)*100)
+                if percentDone != 99:
+                    ringText.configure(text=str(percentDone) + '%')
+                else:
+                    ringText.configure(text=str(percentDone +1 ) + '%')
                 root.update()
             runButton['background'] = 'LightGreen'
             rowsFound = [] #Table for the assets found and their information
@@ -705,46 +710,46 @@ invSheetDd.place(x = 250, y = 25)
 invSheetDd.configure(background='Tomato', font=('Arial', 14, 'bold'), height=1, width=18)
 
 #Loads Sonic sprites
-sonicIdlePath = Image.open()
+sonicIdlePath = Image.open(r"#####")
 sonicIdlePhoto = ImageTk.PhotoImage(sonicIdlePath)
 
-sonicRunPath_1 = Image.open()
+sonicRunPath_1 = Image.open(r"#####")
 sonicRunPhoto_1 = ImageTk.PhotoImage(sonicRunPath_1)
 
-sonicRunPath_2 = Image.open()
+sonicRunPath_2 = Image.open(r"#####")
 sonicRunPhoto_2 = ImageTk.PhotoImage(sonicRunPath_2)
 
-sonicRunPath_3 = Image.open()
+sonicRunPath_3 = Image.open(r"#####")
 sonicRunPhoto_3 = ImageTk.PhotoImage(sonicRunPath_3)
 
-sonicRunPath_4 = Image.open()
+sonicRunPath_4 = Image.open(r"#####")
 sonicRunPhoto_4 = ImageTk.PhotoImage(sonicRunPath_4)
 
-sonicRunPath_5 = Image.open()
+sonicRunPath_5 = Image.open(r"#####")
 sonicRunPhoto_5 = ImageTk.PhotoImage(sonicRunPath_5)
 
-sonicRunPath_6 = Image.open()
+sonicRunPath_6 = Image.open(r"#####")
 sonicRunPhoto_6 = ImageTk.PhotoImage(sonicRunPath_6)
 
-sonicRunPath_7 = Image.open()
+sonicRunPath_7 = Image.open(r"#####")
 sonicRunPhoto_7 = ImageTk.PhotoImage(sonicRunPath_7)
 
-sonicRunPath_8 = Image.open()
+sonicRunPath_8 = Image.open(r"#####")
 sonicRunPhoto_8 = ImageTk.PhotoImage(sonicRunPath_8)
 
-sonicStopPath = Image.open()
+sonicStopPath = Image.open(r"#####")
 sonicStopPhoto = ImageTk.PhotoImage(sonicStopPath)
 
-sonicFinishedPath = Image.open()
+sonicFinishedPath = Image.open(r"#####")
 sonicFinishedPhoto = ImageTk.PhotoImage(sonicFinishedPath)
 
-sonicRingPath = Image.open()
+sonicRingPath = Image.open(r"#####")
 sonicRingPhoto = ImageTk.PhotoImage(sonicRingPath)
 
-rankSPath = Image.open()
+rankSPath = Image.open(r"#####")
 rankSPhoto = ImageTk.PhotoImage(rankSPath)
 
-rankFPath = Image.open()
+rankFPath = Image.open(r"#####")
 rankFPhoto = ImageTk.PhotoImage(rankFPath)
 
 sonicRunFull = [sonicRunPhoto_1, sonicRunPhoto_2, sonicRunPhoto_3, sonicRunPhoto_4, sonicRunPhoto_5,
